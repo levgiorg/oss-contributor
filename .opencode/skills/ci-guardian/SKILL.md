@@ -76,19 +76,78 @@ gh api repos/anomalyco/opencode/pulls/<N> --method PATCH \
 - Maintainer approval needed to trigger CI
 - Local verification (ruff + pytest) is the best you can do
 
-## Post-Open CI Monitoring
+## Post-PR Monitoring (CRITICAL — DO NOT SKIP)
 
+After opening a PR, **immediately** monitor it for issues. Bots and maintainers will comment within minutes.
+
+### 1. Monitor CI
 ```bash
-# Watch CI for a specific PR
+# Watch all CI checks complete
 gh pr checks <pr_number> -R <owner>/<repo> --watch --interval 30
+```
 
-# Check failed CI logs
-gh run view --log-failed
+### 2. Check for bot comments (ALWAYS do this)
+```bash
+# See ALL comments on your PR
+gh pr view <pr_number> -R <owner>/<repo> --json comments \
+  --jq '.comments[] | "\(.author.login) | \(.createdAt): \(.body[:200])"'
 
-# Check PR for bot comments
+# Check specifically for bot comments (compliance, duplicates, standards)
 gh pr view <pr_number> -R <owner>/<repo> --json comments \
   --jq '.comments[] | select(.author.login == "github-actions") | .body'
 ```
+
+### 3. Check for maintainer reviews
+```bash
+gh pr view <pr_number> -R <owner>/<repo> --json reviews \
+  --jq '.reviews[] | "\(.author.login): \(.state) — \(.body[:200])"'
+```
+
+### 4. Check labels (compliance/auto-close labels!)
+```bash
+gh pr view <pr_number> -R <owner>/<repo> --json labels \
+  --jq '.labels[] | .name'
+```
+
+### 5. Respond to issues IMMEDIATELY
+
+| What you see | Action |
+|-------------|--------|
+| `needs:compliance` label | Update PR body to match template EXACTLY via `gh api repos/.../pulls/<N> --method PATCH -f body='...'` |
+| "Potential duplicate" comment | Check the flagged PR. If identical, close yours. If different approach, comment why. |
+| Maintainer review requesting changes | Push the fix. Do NOT argue — just fix it. |
+| Auto-close bot comment | Comment on the ISSUE (not PR) requesting assignment. Reference your closed PR number. |
+| All CI green, no comments | Great — now wait. Do NOT ping maintainers. |
+
+### 6. Monitor ALL your open PRs at once
+```bash
+# List all open PRs with their CI status
+gh search prs --author levgiorg --state open --json number,title,repository,statusCheckRollup,labels \
+  --jq '.[] | "\(.repository.name)#\(.number): \([.labels[].name]?) — checks: \([.statusCheckRollup[]?.conclusion] | unique)"'
+```
+
+### Common post-PR scenarios from real experience:
+
+**opencode #29378 — compliance bot auto-close threat:**
+- Bot commented: "PR description is missing required template sections"
+- Label `needs:compliance` applied → auto-close in 2 hours if not fixed
+- Fix: Updated PR body via `gh api PATCH` with ALL template sections
+- Bot re-checked and commented: "Thanks for updating your PR! It now meets our contributing guidelines."
+
+**opencode #29370 — duplicate detection:**
+- Bot commented: "Potential Duplicate Found: PR #29276"
+- Both PRs had identical diffs (same fix for /compact command)
+- No auto-close, but maintainer will likely pick the first-opened PR
+
+**opencode #29371 — dirty diff (300+ files):**
+- Force-pushed clean branch from fresh clone
+- Diff went from 300+ files to 1 file / 1 line
+- CI re-ran with only the relevant change
+
+**langgraph #7909, #7911, #7912 — auto-close bot:**
+- All 3 PRs auto-closed within seconds of opening
+- Commented on each issue referencing the closed PR number
+- Maintainer must assign before PRs reopen
 
 ## Husky Pre-Push Hook (opencode)
 

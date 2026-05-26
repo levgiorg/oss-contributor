@@ -128,6 +128,25 @@ gh pr create \
 ```
 **NEVER** create PRs against `levgiorg/<repo>` — always cross-reference to upstream.
 
+### 10. MONITOR THE PR IMMEDIATELY (CRITICAL)
+```bash
+# Watch CI
+gh pr checks <pr_number> -R <owner>/<repo> --watch --interval 30
+
+# Check ALL comments (bots + maintainers)
+gh pr view <pr_number> -R <owner>/<repo> --json comments \
+  --jq '.comments[] | "\(.author.login): \(.body[:300])"'
+
+# Check for compliance labels (opencode: "needs:compliance" = auto-close in 2h)
+gh pr view <pr_number> -R <owner>/<repo> --json labels --jq '.labels[].name'
+```
+
+**Respond to issues within minutes:**
+- `needs:compliance` label → update PR body immediately
+- Bot says "duplicate found" → check the flagged PR, close yours if identical
+- Maintainer review → fix what they ask, don't argue
+- Auto-close (langgraph/langchain) → comment on the ISSUE referencing your closed PR number
+
 ### 10. PR Body — Use the ACTUAL template from the repo
 For anomalyco/opencode (uses specific template):
 ```
