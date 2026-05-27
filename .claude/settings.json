@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh:*)",
+      "Bash(git:*)",
+      "Bash(bun:*)",
+      "Bash(bun run:*)",
+      "Bash(ruff:*)",
+      "Bash(pytest:*)",
+      "Bash(make:*)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(cat:*)",
+      "Bash(export PATH*)",
+      "Bash(mkdir:*)",
+      "Bash(cd /tmp*)"
+    ]
+  }
+}
