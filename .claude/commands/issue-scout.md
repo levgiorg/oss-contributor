@@ -60,6 +60,15 @@ gh issue view <N> -R <owner>/<repo> --comments \
 
 ## Repo-Specific Rules
 
+### directus/directus (TypeScript/Vue — PREFERRED TARGET)
+- Base branch: **main**
+- Uses `pnpm` for dependencies, `vitest` for tests, `prettier` + `eslint` for lint
+- No auto-close bot
+- CLA signed (levgiorg in contributors.yml)
+- Issues labeled "Good First Issue" are excellent targets
+- Monorepo — most fixes are in `app/src/` (frontend) or `api/src/` (backend)
+- Changesets required — create a `.changeset/<name>.md` with each fix
+
 ### anomalyco/opencode (Bun/TypeScript)
 - Base branch: **dev** (not main)
 - PR template enforcement is STRICT — compliance bot auto-closes in 2h

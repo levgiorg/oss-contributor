@@ -33,13 +33,15 @@ If `gh repo clone` fails, use: `git clone --depth 1 https://github.com/levgiorg/
 ```bash
 # anomalyco/opencode:
 git checkout -b fix/issue-<N>-<slug> upstream/dev
-# All others (smolagents, langgraph):
+# directus/directus, huggingface/smolagents, langchain-ai/langgraph:
 git checkout -b fix/issue-<N>-<slug> upstream/main
-# langchain:
+# langchain-ai/langchain:
 git checkout -b fix/issue-<N>-<slug> upstream/master
 ```
 
 ### 4. Install deps — NEVER commit lockfiles
+
+**For opencode (Bun):**
 ```bash
 export PATH="$HOME/.bun/bin:$PATH"
 bun install
@@ -47,6 +49,18 @@ bun install
 git checkout -- bun.lock 2>/dev/null
 git checkout -- packages/*/package.json 2>/dev/null
 git clean -fd 2>/dev/null
+```
+
+**For directus (pnpm):**
+```bash
+pnpm install
+# Discard lockfile changes:
+git checkout -- pnpm-lock.yaml 2>/dev/null
+```
+
+**For Python repos (smolagents, langgraph, langchain):**
+```bash
+pip install -e . 2>/dev/null || pip install -r requirements.txt 2>/dev/null
 ```
 
 ### 5. READ CONTRIBUTING RULES + PR TEMPLATE (CRITICAL — DO NOT SKIP)
@@ -72,6 +86,17 @@ export PATH="$HOME/.bun/bin:$PATH"
 bun run typecheck && bun test
 # Python:
 ruff format . --check && ruff check . && pytest tests/ -x -q
+```
+
+### 7b. For directus/directus — create a changeset
+```bash
+cat > .changeset/<random-slug>.md << 'EOF'
+---
+'@directus/app': patch
+---
+
+<brief description of the fix>
+EOF
 ```
 
 ### 8. Commit

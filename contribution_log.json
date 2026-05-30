@@ -102,10 +102,10 @@
     "branch": "fix/issue-7776-stacklevel",
     "pr_url": "https://github.com/langchain-ai/langgraph/pull/7912",
     "pr_number": 7912,
-    "ci_status": "pending",
+    "ci_status": "closed",
     "opened_at": "2026-05-26",
-    "skipped": false,
-    "skip_reason": null
+    "skipped": true,
+    "skip_reason": "auto-closed: contributor not assigned to issue #7776. Commented requesting assignment."
   },
   {
     "repo": "langchain-ai/langgraph",
@@ -138,8 +138,68 @@
     "branch": "fix/issue-29094-viewport-snap",
     "pr_url": "https://github.com/anomalyco/opencode/pull/29406",
     "pr_number": 29406,
+    "ci_status": "closed",
+    "opened_at": "2026-05-26",
+    "skipped": true,
+    "skip_reason": "auto-closed: PR template missing required sections + no linked issue. Closed within 2h window by compliance bot."
+  },
+  {
+    "repo": "anomalyco/opencode",
+    "issue": 29573,
+    "issue_title": "Edit tool strips leading whitespace from first line of replacement block",
+    "branch": "fix/issue-29573-edit-whitespace",
+    "pr_url": "https://github.com/anomalyco/opencode/pull/29995",
+    "pr_number": 29995,
+    "ci_status": "pending",
+    "opened_at": "2026-05-30",
+    "skipped": false,
+    "skip_reason": null
+  },
+  {
+    "repo": "anomalyco/opencode",
+    "issue": null,
+    "issue_title": null,
+    "branch": null,
+    "pr_url": "https://github.com/anomalyco/opencode/pull/29403",
+    "pr_number": 29403,
     "ci_status": "pending",
     "opened_at": "2026-05-26",
+    "skipped": false,
+    "skip_reason": null
+  },
+  {
+    "repo": "anomalyco/opencode",
+    "issue": null,
+    "issue_title": null,
+    "branch": null,
+    "pr_url": "https://github.com/anomalyco/opencode/pull/29404",
+    "pr_number": 29404,
+    "ci_status": "pending",
+    "opened_at": "2026-05-26",
+    "skipped": false,
+    "skip_reason": null
+  },
+  {
+    "repo": "directus/directus",
+    "issue": 27358,
+    "issue_title": "Search input doesn't trim whitespace, causing empty results",
+    "branch": "fix/issue-27358-search-trim",
+    "pr_url": "https://github.com/directus/directus/pull/27645",
+    "pr_number": 27645,
+    "ci_status": "pending",
+    "opened_at": "2026-05-30",
+    "skipped": false,
+    "skip_reason": null
+  },
+  {
+    "repo": "directus/directus",
+    "issue": 26728,
+    "issue_title": "AI Assistant clear conversation does not cancel ongoing requests",
+    "branch": "fix/issue-26728-clear-cancel-requests",
+    "pr_url": "https://github.com/directus/directus/pull/27646",
+    "pr_number": 27646,
+    "ci_status": "pending",
+    "opened_at": "2026-05-30",
     "skipped": false,
     "skip_reason": null
   }

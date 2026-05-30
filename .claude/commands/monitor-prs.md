@@ -19,7 +19,7 @@ Use `/schedule` and describe: "Every 60 minutes, run /monitor-prs in /Users/geor
 ### Step 1 — Load open PRs from contribution_log.json
 
 ```bash
-cat /Users/georgelevis/Projects/Contibuting/contribution_log.json | \
+cat contribution_log.json | \
   python3 -c "
 import json, sys
 log = json.load(sys.stdin)
@@ -100,14 +100,14 @@ Then update `contribution_log.json`:
 # Set ci_status to "closed" and add skip_reason
 python3 -c "
 import json
-with open('/Users/georgelevis/Projects/Contibuting/contribution_log.json') as f:
+with open('contribution_log.json') as f:
     log = json.load(f)
 for entry in log:
     if entry['pr_number'] == <N>:
         entry['ci_status'] = 'closed'
         entry['skipped'] = True
         entry['skip_reason'] = 'auto-closed: contributor not assigned to issue. Commented requesting assignment.'
-with open('/Users/georgelevis/Projects/Contibuting/contribution_log.json', 'w') as f:
+with open('contribution_log.json', 'w') as f:
     json.dump(log, f, indent=2)
 "
 ```
@@ -117,25 +117,63 @@ Celebrate and update log:
 ```bash
 python3 -c "
 import json
-with open('/Users/georgelevis/Projects/Contibuting/contribution_log.json') as f:
+with open('contribution_log.json') as f:
     log = json.load(f)
 for entry in log:
     if entry['pr_number'] == <N>:
         entry['ci_status'] = 'merged'
-with open('/Users/georgelevis/Projects/Contibuting/contribution_log.json', 'w') as f:
+with open('contribution_log.json', 'w') as f:
     json.dump(log, f, indent=2)
 "
 ```
 
 #### ACTION: Maintainer review requesting changes
-**Do NOT auto-fix.** Surface the finding for human review:
 
+**Evaluate the review comment:** Is this a simple, scoped change request?
+
+**Auto-fix if the request is clear and scoped** (examples of auto-fixable comments):
+- "This PR seems to be missing the part that prints out the error"
+- "Could you add a test for this edge case?"
+- "The variable name should be X instead of Y"
+- "Please add a comment explaining why this is needed"
+- "This should use `logError` instead of `console.log`"
+
+**How to auto-fix:**
+1. Clone the branch if not already cloned:
+   ```bash
+   gh repo clone levgiorg/<repo> /tmp/<repo>-<pr_number>
+   cd /tmp/<repo>-<pr_number>
+   git fetch origin <branch_name>
+   git checkout <branch_name>
+   ```
+2. Make the requested change (minimal, scoped to the review)
+3. Run CI locally:
+   ```bash
+   # TypeScript: export PATH="$HOME/.bun/bin:$PATH"; bun run typecheck && bun test
+   # Python: ruff check . && pytest tests/ -x -q
+   ```
+4. Commit with conventional format:
+   ```
+   fix: <address review feedback>
+   ```
+5. Push and reply to the review comment:
+   ```bash
+   gh pr comment <N> -R <owner>/<repo> --body "Good catch — fixed in <commit_hash>. Thanks!"
+   ```
+
+**Surface for human review ONLY when the request is ambiguous:**
+- "This approach won't work, please redesign"
+- "Can we discuss the architecture of this?"
+- "Have you considered using pattern X instead?" (when unclear preference)
+- Any comment asking for a design-level change
+
+When surfacing, format clearly:
 ```
 PR #<N> (<repo>): Maintainer <username> requested changes:
   "<review comment>"
   → Branch: <branch>
   → File: check the PR for specific file/line references
-  ACTION NEEDED: Push a fix commit to address the review.
+  ACTION NEEDED: Review the feedback and decide how to proceed.
 ```
 
 #### ACTION: Potential duplicate comment

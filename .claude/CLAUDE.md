@@ -5,6 +5,7 @@
 - GitHub: levgiorg
 - Email: levgiorg@gmail.com
 - Mode: Autonomous (no pause, no confirmation, no manual review gates)
+- Auto-start: On every session, run `/auto` to engage the autonomous pipeline
 
 ## Tool Requirements
 
@@ -23,24 +24,25 @@ ruff --version                         # any recent
 
 | Command | Purpose |
 |---------|---------|
+| `/auto` | **Autonomous pipeline** — assess state → scout → fix → PR → monitor. Runs hands-free. |
 | `/oss-contribute` | Full contribution workflow: fork → clone → fix → test → PR |
 | `/issue-scout` | Find viable issues, run triple deduplication check |
 | `/pr-crafter` | Create well-formed PRs that pass compliance bots |
 | `/ci-guardian` | Verify CI passes, fix common failures, monitor post-PR |
 | `/monitor-prs` | Check all open PRs for comments, labels, reviews — act on issues |
 
-### Starting the PR Monitor
+### Starting the autonomous pipeline
 
-**Session-bound (while Claude Code is open):**
+**Interactive (while Claude Code is open):**
 ```
-/loop 60m /monitor-prs
+/loop /auto
 ```
 
 **Unattended (runs even when session is closed):**
 ```
 /schedule
 ```
-Then describe: "Every 60 minutes, run /monitor-prs against the contribution_log.json in /Users/georgelevis/Projects/Contibuting"
+Then describe: "Every 2 hours, run /auto"
 
 ## Hard Rules (NEVER violate)
 
@@ -63,6 +65,7 @@ Then describe: "Every 60 minutes, run /monitor-prs against the contribution_log.
 | Repo | Lang | Base | CI Tool | Auto-Close? | Template |
 |------|------|------|---------|-------------|---------|
 | anomalyco/opencode | TS/Bun | `dev` | `bun typecheck`, `bun test` | No | **STRICT** — compliance bot checks exact section headers |
+| directus/directus | TS/Vue | `main` | `pnpm`, `vitest`, `prettier`, `eslint` | No (CLA signed) | Flexible |
 | huggingface/smolagents | Python | `main` | `ruff`, `pytest` | No | Flexible |
 | langchain-ai/langgraph | Python | `main` | `ruff`, `pytest` | YES (must be assigned) | Flexible |
 | langchain-ai/langchain | Python | `master` | `ruff`, `pytest` | YES (must be assigned) | Flexible |
@@ -123,6 +126,38 @@ _Not applicable — no UI change._
 ## Related Issue
 
 Closes #<N>
+```
+
+### directus/directus
+
+```
+## Scope
+
+What's changed:
+
+- `<file or component>`: <what and why>
+
+## Potential Risks / Drawbacks
+
+- <honest assessment>
+
+## Tested Scenarios
+
+- <what you verified>
+
+## Review Notes / Questions
+
+- None
+
+## Checklist
+
+- [x] Added or updated tests — not needed
+- [x] Documentation PR created [here](https://github.com/directus/docs) or not required
+- [x] OpenAPI package PR created [here](https://github.com/directus/openapi) or not required
+
+---
+
+Fixes #<N>
 ```
 
 ## Issue Selection Priority

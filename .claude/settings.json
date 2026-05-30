@@ -13,7 +13,20 @@
       "Bash(cat:*)",
       "Bash(export PATH*)",
       "Bash(mkdir:*)",
-      "Bash(cd /tmp*)"
+      "Bash(cd /tmp*)",
+      "Bash(sed:*)",
+      "Bash(node:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(npx:*)",
+      "Bash(npm:*)",
+      "Bash(pnpm:*)",
+      "Bash(curl:*)",
+      "Bash(echo:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Bash(rm:*)",
+      "Bash(test:*)"
     ]
   }
 }
